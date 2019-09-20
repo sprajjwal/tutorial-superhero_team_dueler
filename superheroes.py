@@ -68,24 +68,28 @@ class Weapon(Ability):
         return random.randint(self.max_damage//2, self.max_damage)
 
 class Team:
-    heroes = []
     def __init__(self, name):
         self.name = name
 
     def remove_hero(self, name):
-        for hero in self.heroes:
-            if hero.name == name:
-                self.heroes.remove(hero)
-                return
-        return 0
+        try:
+            for hero in self.heroes:
+                if hero.name == name:
+                    self.heroes.remove(hero)
+            return 0
+        except:
+            return 0
         
     def view_all_heroes(self):
         for hero in self.heroes:
             print(hero.name)
 
     def add_hero(self, hero):
-        self.heroes.append(hero)
-
+        try:
+            self.heroes.append(hero)
+        except:
+            self.heroes = []
+            self.heroes.append(hero)
 
 if __name__ == "__main__":
     team = Team("One")

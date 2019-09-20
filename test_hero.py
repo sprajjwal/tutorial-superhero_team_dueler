@@ -264,7 +264,6 @@ def test_team_hero():
     assert len(team.heroes) == 1
     assert team.heroes[0].name == "Jodie Foster"
 
-
 def test_team_remove_hero():
     team = superheroes.Team("One")
     jodie = superheroes.Hero("Jodie Foster")
@@ -272,7 +271,6 @@ def test_team_remove_hero():
     assert team.heroes[0].name == "Jodie Foster"
     team.remove_hero("Jodie Foster")
     assert len(team.heroes) == 0
-    
 
 def test_team_remove_unlisted():
     # Test that if no results found return 0
