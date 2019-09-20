@@ -65,34 +65,33 @@ class Hero:
 
 class Weapon(Ability):
     def attack(self):
-        return random.randint(0, self.max_damage)
+        return random.randint(self.max_damage//2, self.max_damage)
 
 class Team:
-    heros = []
-    def __init__(self, name, heros):
+    heroes = []
+    def __init__(self, name):
         self.name = name
-        for hero in heros:
-            self.heros.append(hero)
+
     def remove_hero(self, name):
-        if name in self.
-            self.heros.remove(name)
+        for hero in self.heroes:
+            if hero.name == name:
+                self.heroes.remove(hero)
+                return
+        return 0
         
-    def show_heros(self):
-        print(self.heros[0].name, '\n',self.heros[1].name)
+    def view_all_heroes(self):
+        for hero in self.heroes:
+            print(hero.name)
+
+    def add_hero(self, hero):
+        self.heroes.append(hero)
 
 
 if __name__ == "__main__":
-    hero1 = Hero("Wonder Woman")
-    hero2 = Hero("Dumbledore")
-    # ability1 = Ability("Super Speed", 300)
-    # ability2 = Ability("Super Eyes", 130)
-    # ability3 = Ability("Wizard Wand", 80)
-    # ability4 = Ability("Wizard Beard", 20)
-    # hero1.add_ability(ability1)
-    # hero1.add_ability(ability2)
-    # hero2.add_ability(ability3)
-    # hero2.add_ability(ability4)
-    # hero1.fight(hero2)
-
-    team1 = Team("Team A", [hero1, hero2])
-    team1.show_heros()
+    team = Team("One")
+    jodie = Hero("Jodie Foster")
+    team.add_hero(jodie)
+    assert team.heroes[0].name == "Jodie Foster"
+    team.remove_hero("Jodie Foster")
+    assert len(team.heroes) == 0
+    print(len(team.heroes))
