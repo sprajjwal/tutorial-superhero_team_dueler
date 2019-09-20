@@ -48,32 +48,51 @@ class Hero:
     def is_alive(self):
         return self.current_health > 0
 
+    #helper function for fight
+    @staticmethod
+    def fighting(self, opponent):
+        opponent.take_damage(self.attack())
+        if not self.is_alive() or not opponent.is_alive():
+            return
+        self.fighting(opponent, self)
+
     def fight(self, opponent):
-        fighting(self, opponent)
+        self.fighting(self, opponent)
         if self.is_alive():
             print(f"{self.name} won!")
         else:
             print(f"{opponent.name} won!")
-        
 
-#helper function for fight
-def fighting(self, opponent):
-    opponent.take_damage(self.attack())
-    if not self.is_alive() or not opponent.is_alive():
-        return
-    fighting(opponent, self)
-    
+class Weapon(Ability):
+    def attack(self):
+        return random.randint(0, self.max_damage)
+
+class Team:
+    heros = []
+    def __init__(self, name, heros):
+        self.name = name
+        for hero in heros:
+            self.heros.append(hero)
+    def remove_hero(self, name):
+        if name in self.
+            self.heros.remove(name)
         
+    def show_heros(self):
+        print(self.heros[0].name, '\n',self.heros[1].name)
+
 
 if __name__ == "__main__":
     hero1 = Hero("Wonder Woman")
     hero2 = Hero("Dumbledore")
-    ability1 = Ability("Super Speed", 300)
-    ability2 = Ability("Super Eyes", 130)
-    ability3 = Ability("Wizard Wand", 80)
-    ability4 = Ability("Wizard Beard", 20)
-    hero1.add_ability(ability1)
-    hero1.add_ability(ability2)
-    hero2.add_ability(ability3)
-    hero2.add_ability(ability4)
-    hero1.fight(hero2)
+    # ability1 = Ability("Super Speed", 300)
+    # ability2 = Ability("Super Eyes", 130)
+    # ability3 = Ability("Wizard Wand", 80)
+    # ability4 = Ability("Wizard Beard", 20)
+    # hero1.add_ability(ability1)
+    # hero1.add_ability(ability2)
+    # hero2.add_ability(ability3)
+    # hero2.add_ability(ability4)
+    # hero1.fight(hero2)
+
+    team1 = Team("Team A", [hero1, hero2])
+    team1.show_heros()
