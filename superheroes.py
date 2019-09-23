@@ -172,18 +172,21 @@ class Arena:
         self.team_two = None
 
     def create_ability(self):
+        ''' prompts user to create abilities for hero'''
         print("- - - " * 7)
         ability_name = input("Enter the name for your ability: ")
         max_strength = int(input(f"Enter the maximum strength for {ability_name}: "))
         return Ability(ability_name, max_strength)
 
     def create_weapon(self):
+        ''' prompts user to create weapon for hero'''
         print("- - - " * 7)
         weapon_name = input("Enter the name for your weapon: ")
         max_strength = int(input(f"Enter the maximum damage for {weapon_name}: "))
         return Weapon(weapon_name, max_strength)
 
     def create_armor(self):
+        ''' prompts user to create armor for hero'''
         print("- - - " * 7)
         armor_name = input("Enter the name for your armor: ")
         max_block = int(input(f"Enter the maximum block for {armor_name}: "))
@@ -191,9 +194,12 @@ class Arena:
 
     @staticmethod
     def yes_or_no(self, purpose):
+        ''' helper function that prompts user to respond with Y/N
+        for user to create more of something'''
         return input(f"Do you want to {purpose}?(Y/N): ").upper()
 
     def create_hero(self):
+        ''' prompts user to create a hero '''
         print("- - - " * 7)
         hero_name = input("Enter your hero's name: ")
         hero_health = int(input("Enter your hero's starting health: "))
@@ -207,6 +213,7 @@ class Arena:
         return hero
 
     def build_team_one(self):
+        ''' builds a team by creating multiple heros'''
         os.system('clear')
         name = input("Enter team one's name: ")
         self.team_one = Team(name)
@@ -216,6 +223,7 @@ class Arena:
             num_heroes -= 1
 
     def build_team_two(self):
+        ''' builds a team by creating multiple heros'''
         os.system('clear')
         name = input("Enter team two's name: ")
         self.team_two = Team(name)
@@ -225,9 +233,11 @@ class Arena:
             num_heroes -= 1
 
     def team_battle(self):
+        ''' makes the teams battle each other'''
         self.team_one.attack(self.team_two)
 
     def show_stats(self):
+        ''' shows all the stats for each team'''
         os.system('clear')
         if self.team_one.is_team_alive():
             print(f"{self.team_one.name.upper()} won")
@@ -249,6 +259,7 @@ class Arena:
         print("- - - " * 7)
 
 if __name__ == "__main__":
+    ''' main function running the game '''
     game_is_running = True
 
     # Instantiate Game Arena
