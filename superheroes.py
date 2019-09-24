@@ -1,6 +1,26 @@
 import random
 import os
 
+def input_validate(prompt, type):
+    ''' validaetes input based on type and returns valid input :
+        type = 1 => integer
+        type = 2 => string '''
+
+    data_types = {1: 'integer', 2: 'name! Please use alhabets(A-Z, a-z) only'}  ##, 3: 'float'}
+    assert 1 <= type <= len(data_types), f"Unsupported input type: {type}"
+    data_type = data_types[type]
+
+    while True:
+        user_input = input(prompt)
+        if data_type == 'integer' and user_input.isdigit():
+            return user_input
+        elif data_type == 'name' and user_input.isalpha():
+            return user_input
+        print(f"Please enter an {data_type}!")
+        
+
+
+
 class Ability:
     def __init__(self, name, attack_strength):
         self.name = name
@@ -35,10 +55,8 @@ class Hero:
 
     def attack(self):
         ''' returns how much damage a hero can do '''
-        damage = 0
-        for ability in self.abilities:
-            damage += ability.attack()
-        return damage
+        return sum(ability.attack() for ability in self.abilities)
+
 
     def add_armor(self, armor):
         ''' add armor to list of armors for a hero'''
@@ -48,10 +66,11 @@ class Hero:
         ''' returns how much damage a hero blocks based on armor'''
         if not self.is_alive():
             return 0
-        block = 0
-        for armor in self.armors:
-            block += armor.block()
-        return block
+        # block = 0
+        # for armor in self.armors:
+        #     block += armor.block()
+        # return block
+        return sum(armor.block() for armor in self.armors)    
 
     def take_damage(self, damage):
         ''' does damage to a hero's current health '''
@@ -80,6 +99,9 @@ class Hero:
 
     def fight(self, opponent):
         ''' makes a hero fight another until one of them is dead '''
+        if len(self.abilities) == 0  or len(opponent.abilities) == 0:
+            print("Draw!")
+            return
         self.fighting(self, opponent)
         if self.is_alive():
             print(f"{self.name} won!")
@@ -147,9 +169,9 @@ class Team:
             self_fighter = self.get_random_fighter(self)
             other_team_fighter = other_team.get_random_fighter(other_team)
             self_fighter.fight(other_team_fighter)
-            if self.is_team_alive():
+            if self.is_team_alive() or self_fighter == 0:
                 dead = 1
-            elif other_team.is_team_alive():
+            elif other_team.is_team_alive() or other_team_fighter == 0:
                 dead = 2
 
     def revive_heroes(self, health = 100):
@@ -160,77 +182,80 @@ class Team:
     def stats(self):
         ''' prints K/D ratio for every hero in the team'''
         for hero in self.heroes:
-            if hero.deaths == 0:
-                ratio = 'Infinite'
-            else:
-                ratio = hero.kills/hero.deaths
-            print(f"{hero.name}'s K/D ratio is: {ratio}")
+            print(f"{hero.name}'s K/D ratio is: {hero.kills}/{hero.deaths}")
 
 class Arena:
     def __init__(self):
         self.team_one = None
         self.team_two = None
 
-    def create_ability(self):
+    def create_ability(self, name):
         ''' prompts user to create abilities for hero'''
         print("- - - " * 7)
-        ability_name = input("Enter the name for your ability: ")
-        max_strength = int(input(f"Enter the maximum strength for {ability_name}: "))
+        ability_name = input_validate(f"Enter the name for your ability to give to {name}: ", 2)
+        max_strength = int(input_validate(f"Enter the maximum strength for {ability_name}: ", 1))
         return Ability(ability_name, max_strength)
 
-    def create_weapon(self):
+    def create_weapon(self, name):
         ''' prompts user to create weapon for hero'''
         print("- - - " * 7)
-        weapon_name = input("Enter the name for your weapon: ")
-        max_strength = int(input(f"Enter the maximum damage for {weapon_name}: "))
+        weapon_name = input_validate(f"Enter the name for your weapon to give to {name}: ", 2)
+        max_strength = int(input_validate(f"Enter the maximum damage for {weapon_name}: ", 1))
         return Weapon(weapon_name, max_strength)
 
-    def create_armor(self):
+    def create_armor(self, name):
         ''' prompts user to create armor for hero'''
         print("- - - " * 7)
-        armor_name = input("Enter the name for your armor: ")
-        max_block = int(input(f"Enter the maximum block for {armor_name}: "))
+        armor_name = input_validate(f"Enter the name for your armor to give to {name}: ", 2)
+        max_block = int(input_validate(f"Enter the maximum block for {armor_name}: ", 1))
         return Armor(armor_name, max_block)
 
     @staticmethod
     def yes_or_no(self, purpose):
         ''' helper function that prompts user to respond with Y/N
         for user to create more of something'''
-        return input(f"Do you want to {purpose}?(Y/N): ").upper()
+        return input_validate(f"Do you want to {purpose}?(Y/N): ", 2).upper()
 
-    def create_hero(self):
+    def create_hero(self, team_number, hero_number):
         ''' prompts user to create a hero '''
         print("- - - " * 7)
-        hero_name = input("Enter your hero's name: ")
-        hero_health = int(input("Enter your hero's starting health: "))
+
+        hero_name = input(f"Enter hero number {hero_number}'s name for {team_number}: ")
+        hero_health = int(input(f"Enter your hero number {hero_number}'s starting health: "))
         hero = Hero(hero_name, hero_health)
-        while self.yes_or_no(self, "add an ability") == 'Y':
-            hero.add_ability(self.create_ability())
-        while self.yes_or_no(self, "add a weapon") == 'Y':
-            hero.add_weapon(self.create_weapon())
-        while self.yes_or_no(self, "add an armor") == 'Y':
-            hero.add_armor(self.create_armor())
+
+        while self.yes_or_no(self, "add an ability") == 'Y': # create abilities
+            hero.add_ability(self.create_ability(hero_name))
+        while self.yes_or_no(self, "add a weapon") == 'Y': # create weapons
+            hero.add_weapon(self.create_weapon(hero_name))
+        while self.yes_or_no(self, "add an armor") == 'Y': # create armors
+            hero.add_armor(self.create_armor(hero_name))
         return hero
 
     def build_team_one(self):
         ''' builds a team by creating multiple heros'''
         os.system('clear')
-        name = input("Enter team one's name: ")
+
+        name = input_validate("Enter team one's name: ", 2)
         self.team_one = Team(name)
-        num_heroes = int(input(f"How many heroes do you want on {self.team_one.name}: "))
-        while num_heroes > 0:
-            self.team_one.heroes.append(self.create_hero())
-            num_heroes -= 1
+        num_heroes = int(input_validate(f"How many heroes do you want on {self.team_one.name}: ", 1))
+        ctr = 1
+        while ctr <= num_heroes:
+            self.team_one.heroes.append(self.create_hero("Team One", ctr))
+            os.system('clear')
+            ctr += 1
 
     def build_team_two(self):
         ''' builds a team by creating multiple heros'''
         os.system('clear')
-        name = input("Enter team two's name: ")
+        name = input_validate("Enter team two's name: ", 2)
         self.team_two = Team(name)
-        num_heroes = int(input(f"How many heroes do you want on {self.team_two.name}: "))
-        while num_heroes > 0:
-            self.team_two.heroes.append(self.create_hero())
-            num_heroes -= 1
+        num_heroes = int(input_validate(f"How many heroes do you want on {self.team_two.name}: ", 1))
+        ctr = 1
+        while ctr <= num_heroes :
+            self.team_two.heroes.append(self.create_hero("Team Two", ctr))
+            os.system('clear')
+            ctr += 1
 
     def team_battle(self):
         ''' makes the teams battle each other'''
@@ -273,7 +298,7 @@ if __name__ == "__main__":
 
         arena.team_battle()
         arena.show_stats()
-        play_again = input("Play Again? Y or N: ")
+        play_again = input_validate("Play Again? Y or N: ", 2)
 
         #Check for Player Input
         if play_again.lower() == "n":
