@@ -129,9 +129,10 @@ class Team:
 
     def remove_hero(self, name):
         ''' removes hero object from heroes list from the team '''
-        for hero in self.heroes:
-            if hero.name == name:
-                self.heroes.remove(hero)
+        # for hero in self.heroes:
+        #     if hero.name == name:
+        #         self.heroes.remove(hero)
+        self.heroes.remove([hero for hero in self.heroes if hero.name == name][0])
         return 0
 
     def view_all_heroes(self):
@@ -146,9 +147,9 @@ class Team:
     def is_team_alive(self):
         ''' Helper function to check if everyone on team is alive '''
         for hero in self.heroes:
-            if not hero.is_alive():
-                return False
-        return True
+            if hero.is_alive():
+                return True
+        return False
 
     @staticmethod
     def get_random_fighter(self):
@@ -261,6 +262,14 @@ class Arena:
         ''' makes the teams battle each other'''
         self.team_one.attack(self.team_two)
 
+    @staticmethod
+    def team_avg_print(team):
+        kills = 0
+        deaths = 0
+        for hero in team.heroes:
+            kills+= hero.kills
+            deaths += hero.deaths
+        print(f"{team.name} had an average K/D of {kills}/{deaths}")
     def show_stats(self):
         ''' shows all the stats for each team'''
         os.system('clear')
@@ -276,6 +285,8 @@ class Arena:
                     print(f"{hero.name.upper()} survived with {hero.current_health}hp.")
         print("- - - " * 7)
         print("Team Stats:")
+        self.team_avg_print(self.team_one)
+        self.team_avg_print(self.team_two)
         print("- - - " * 7)
         print(f"Team {self.team_one.name.upper()}:")
         self.team_one.stats()
