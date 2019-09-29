@@ -18,8 +18,6 @@ def input_validate(prompt, arg_type):
             return user_input
         print(f"Please enter an {data_type}!")
 
-
-
 class Ability:
     def __init__(self, name, attack_strength):
         self.name = name
