@@ -1,23 +1,22 @@
 import random
 import os
 
-def input_validate(prompt, type):
+def input_validate(prompt, arg_type):
     ''' validaetes input based on type and returns valid input :
         type = 1 => integer
         type = 2 => string '''
 
     data_types = {1: 'integer', 2: 'name! Please use alhabets(A-Z, a-z) only'}  ##, 3: 'float'}
-    assert 1 <= type <= len(data_types), f"Unsupported input type: {type}"
-    data_type = data_types[type]
+    assert 1 <= arg_type <= len(data_types), f"Unsupported input type: {arg_type}"
+    data_type = data_types[arg_type]
 
     while True:
         user_input = input(prompt)
-        if data_type == 'integer' and user_input.isdigit():
+        if arg_type == 1 and user_input.isdigit():
             return user_input
-        elif data_type == 'name' and user_input.isalpha():
+        elif arg_type == 2 and user_input.isalpha():
             return user_input
         print(f"Please enter an {data_type}!")
-        
 
 
 
@@ -221,8 +220,8 @@ class Arena:
         ''' prompts user to create a hero '''
         print("- - - " * 7)
 
-        hero_name = input(f"Enter hero number {hero_number}'s name for {team_number}: ")
-        hero_health = int(input(f"Enter your hero number {hero_number}'s starting health: "))
+        hero_name = input_validate(f"Enter hero number {hero_number}'s name for {team_number}: ", 2)
+        hero_health = input_validate(f"Enter your hero number {hero_number}'s starting health: ", 1)
         hero = Hero(hero_name, hero_health)
 
         while self.yes_or_no(self, "add an ability") == 'Y': # create abilities
