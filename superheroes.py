@@ -13,7 +13,7 @@ def input_validate(prompt, arg_type):
     while True:
         user_input = input(prompt)
         if arg_type == 1 and user_input.isdigit():
-            return user_input
+            return int(user_input)
         elif arg_type == 2 and user_input.isalpha():
             return user_input
         print(f"Please enter an {data_type}!")
